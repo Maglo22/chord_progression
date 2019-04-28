@@ -201,3 +201,25 @@ build(Key, minor, N, [H|T]):-
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
   build(NewKey, minor, NewN, T).
+
+% Characteristic chord combination for modes (based on the circle of fifths)
+
+dorian(Tonic, [Chord1, Chord2]):-
+  name_chord(Tonic, min, Chord1),
+  perfect_fourth(Tonic, Note),
+  name_chord(Note, maj, Chord2).
+
+phrygian(Tonic, [Chord1, Chord2]):-
+  name_chord(Tonic, min, Chord1),
+  minor_second(Tonic, Note),
+  name_chord(Note, maj, Chord2).
+
+lydian(Tonic, [Chord1, Chord2]):-
+  name_chord(Tonic, maj, Chord1),
+  major_second(Tonic, Note),
+  name_chord(Note, maj, Chord2).
+
+mixolydian(Tonic, [Chord1, Chord2]):-
+  name_chord(Tonic, maj, Chord1),
+  minor_seventh(Tonic, Note),
+  name_chord(Note, maj, Chord2).
