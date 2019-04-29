@@ -1,6 +1,9 @@
 % Bruno Maglioni A01700879
 
-% Notes (12-tone chromatic scale)
+% === Knowledge Base === %
+
+% ------- Notes ------- %
+% 12-tone chromatic scale
 is_note(c).
 is_note(c_sharp). is_note(d_flat).
 is_note(d).
@@ -21,6 +24,8 @@ same_note(f_sharp, g_flat).
 same_note(g_sharp, a_flat).
 same_note(a_sharp, b_flat).
 
+
+% ------- Scale ------- %
 % Standard note progression (using sharps)
 next(c, c_sharp).
 next(c_sharp, d).
@@ -49,6 +54,31 @@ prev(e_flat, d).
 prev(d, d_flat).
 prev(d_flat, c).
 
+
+% ------- Chord progressions ------- %
+% progression_type(Number_of_chord, Semitones_to_next_note, Quality)
+
+% Major -> I ii iii IV V vi vii°
+major(1, 2, maj).
+major(2, 2, min).
+major(3, 1, min).
+major(4, 2, maj).
+major(5, 2, maj).
+major(6, 2, min).
+major(7, 1, dim).
+
+% Minor -> i ii° III iv v VI VII
+minor(1, 2, min).
+minor(2, 1, dim).
+minor(3, 2, maj).
+minor(4, 2, min).
+minor(5, 1, min).
+minor(6, 2, maj).
+minor(7, 2, maj).
+
+% === Rules === %
+
+% ------- Intervals ------- %
 % next_n_semitone(Root, Number, Note)
 % Binds to Note the nth semitone starting from Root.
 % next_n_semitone(g, 5, R) -> R = c
@@ -100,7 +130,12 @@ major_seventh(Root, Note):-
 perfect_octave(Root, Note):-
   next_n_semitone(Root, 12, Note).
 
+
+% ------- Chords ------- %
 % Chord building
+
+% Triads
+% Returns a list with the major chord built from the Root
 major_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -109,6 +144,7 @@ major_chord(Root, [N1, N2, N3]):-
   perfect_fifth(Root, Note3),
   upcase_atom(Note3, N3).
 
+% Returns a list with the minor chord built from the Root
 minor_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -117,6 +153,7 @@ minor_chord(Root, [N1, N2, N3]):-
   perfect_fifth(Root, Note3),
   upcase_atom(Note3, N3).
 
+% Returns a list with the diminished chord built from the Root
 diminished_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -125,6 +162,7 @@ diminished_chord(Root, [N1, N2, N3]):-
   tritone(Root, Note3),
   upcase_atom(Note3, N3).
 
+% Returns a list with the augmented chord built from the Root
 augmented_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -133,46 +171,76 @@ augmented_chord(Root, [N1, N2, N3]):-
   minor_sixth(Root, Note3),
   upcase_atom(Note3, N3).
 
-% Chord names based on quaility (Major, Minor, Dim)
-name_chord(Key, maj, Chord):-
-  is_note(Key),
-  %Quality == maj,
-  upcase_atom(Key, Chord), !.
+sus2_chord(Root, [N1, N2, N3]):-
+  is_note(Root),
+  upcase_atom(Root, N1),
+  major_second(Root, Note2),
+  upcase_atom(Note2, N2),
+  perfect_fifth(Root, Note3),
+  upcase_atom(Note3, N3).
 
-name_chord(Key, min, Chord):-
+sus4_chord(Root, [N1, N2, N3]):-
+  is_note(Root),
+  upcase_atom(Root, N1),
+  perfect_fourth(Root, Note2),
+  upcase_atom(Note2, N2),
+  perfect_fifth(Root, Note3),
+  upcase_atom(Note3, N3).
+
+% Tetrads
+major_seventh_chord(Root, [N1, N2, N3, N4]):-
+  is_note(Root),
+  upcase_atom(Root, N1),
+  major_third(Root, Note2),
+  upcase_atom(Note2, N2),
+  perfect_fifth(Root, Note3),
+  upcase_atom(Note3, N3),
+  major_seventh(Root, Note4),
+  upcase_atom(Note4, N4).
+
+minor_seventh_chord(Root, [N1, N2, N3, N4]):-
+  is_note(Root),
+  upcase_atom(Root, N1),
+  minor_third(Root, Note2),
+  upcase_atom(Note2, N2),
+  perfect_fifth(Root, Note3),
+  upcase_atom(Note3, N3),
+  minor_seventh(Root, Note4),
+  upcase_atom(Note4, N4).
+
+dominant_seventh_chord(Root, [N1, N2, N3, N4]):-
+  is_note(Root),
+  upcase_atom(Root, N1),
+  major_third(Root, Note2),
+  upcase_atom(Note2, N2),
+  perfect_fifth(Root, Note3),
+  upcase_atom(Note3, N3),
+  minor_seventh(Root, Note4),
+  upcase_atom(Note4, N4).
+
+% Chord naming
+
+% Binds to Chord the name based on quaility (Major, Minor, Dim)
+% name_chord(d, min, X). -> X = 'Dm'
+name_chord(Key, Quality, Chord):-
+  % Major chord
   is_note(Key),
-  %Quality == min,
+  Quality == maj,
+  upcase_atom(Key, Chord), !;
+  % Minor chord
+  is_note(Key),
+  Quality == min,
   upcase_atom(Key, Ch),
-  atom_concat(Ch, 'm', Chord), !.
-
-name_chord(Key, dim, Chord):-
+  atom_concat(Ch, 'm', Chord), !;
+  % Diminished chord
   is_note(Key),
-  %Quality == dim,
+  Quality == dim,
   upcase_atom(Key, Ch),
   atom_concat(Ch, 'dim', Chord), !.
 
-% Chord progressions
-% progression_type(Number_of_chord, Semitones_to_next_note, Quality)
-
-% Major -> I ii iii IV V vi vii°
-major(1, 2, maj).
-major(2, 2, min).
-major(3, 1, min).
-major(4, 2, maj).
-major(5, 2, maj).
-major(6, 2, min).
-major(7, 1, dim).
-
-% Minor -> i ii° III iv v VI VII
-minor(1, 2, min).
-minor(2, 1, dim).
-minor(3, 2, maj).
-minor(4, 2, min).
-minor(5, 1, min).
-minor(6, 2, maj).
-minor(7, 2, maj).
-
+% ------- Chord Progression ------- %
 % Builds the chord progression in the Key and Quality given
+% build_progression(c, major, X). -> X = ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim']
 build_progression(Key, Quality, List):-
   is_note(Key),
   Quality == major,
@@ -180,7 +248,8 @@ build_progression(Key, Quality, List):-
   Quality == minor,
   build(Key, minor, 1, List).
 
-build(_, _, 8, _):-!.
+% Base case
+build(_, _, 8, []):- !.
 
 % Major progression
 build(Key, major, N, [H|T]):-
@@ -202,7 +271,9 @@ build(Key, minor, N, [H|T]):-
   NewN is N + 1,
   build(NewKey, minor, NewN, T).
 
-% Characteristic chord combination for modes (based on the circle of fifths)
+
+% ------- Modes ------- %
+% Characteristic chord combination for relative modes
 
 dorian(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, min, Chord1),
