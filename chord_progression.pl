@@ -363,7 +363,7 @@ scale(Key, ionian, N, [H|T]):-
   ionian(N, ST),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
-  scale(NewKey, ionian, NewN, T).
+  scale(NewKey, ionian, NewN, T), !.
 
 % Dorian mode
 scale(Key, dorian, N, [H|T]):-
@@ -372,7 +372,7 @@ scale(Key, dorian, N, [H|T]):-
   dorian(N, ST),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
-  scale(NewKey, dorian, NewN, T).
+  scale(NewKey, dorian, NewN, T), !.
 
 % Phrygian mode
 scale(Key, phrygian, N, [H|T]):-
@@ -381,7 +381,7 @@ scale(Key, phrygian, N, [H|T]):-
   phrygian(N, ST),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
-  scale(NewKey, phrygian, NewN, T).
+  scale(NewKey, phrygian, NewN, T), !.
 
 % Lydian mode
 scale(Key, lydian, N, [H|T]):-
@@ -390,7 +390,7 @@ scale(Key, lydian, N, [H|T]):-
   lydian(N, ST),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
-  scale(NewKey, lydian, NewN, T).
+  scale(NewKey, lydian, NewN, T), !.
 
 % Mixolydian mode
 scale(Key, mixolydian, N, [H|T]):-
@@ -399,7 +399,7 @@ scale(Key, mixolydian, N, [H|T]):-
   mixolydian(N, ST),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
-  scale(NewKey, mixolydian, NewN, T).
+  scale(NewKey, mixolydian, NewN, T), !.
 
 % Aeolian mode
 scale(Key, aeolian, N, [H|T]):-
@@ -408,7 +408,7 @@ scale(Key, aeolian, N, [H|T]):-
   aeolian(N, ST),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
-  scale(NewKey, aeolian, NewN, T).
+  scale(NewKey, aeolian, NewN, T), !.
 
 % Locrian mode
 scale(Key, locrian, N, [H|T]):-
@@ -417,7 +417,7 @@ scale(Key, locrian, N, [H|T]):-
   locrian(N, ST),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
-  scale(NewKey, locrian, NewN, T).
+  scale(NewKey, locrian, NewN, T), !.
 
 % ------- Chord Progression ------- %
 % Builds the chord progression in the Key and Quality given
