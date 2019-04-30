@@ -54,6 +54,69 @@ prev(e_flat, d).
 prev(d, d_flat).
 prev(d_flat, c).
 
+% Diatonic scales (modes)
+% Starting Note relative to Major scale = I. (Major scale)
+ionian(1, 2).
+ionian(2, 2).
+ionian(3, 1).
+ionian(4, 2).
+ionian(5, 2).
+ionian(6, 2).
+ionian(7, 1).
+
+% Starting Note relative to Major scale = II
+dorian(1, 2).
+dorian(2, 1).
+dorian(3, 2).
+dorian(4, 2).
+dorian(5, 2).
+dorian(6, 1).
+dorian(7, 2).
+
+% Starting Note relative to Major scale = III
+phrygian(1, 1).
+phrygian(2, 2).
+phrygian(3, 2).
+phrygian(4, 2).
+phrygian(5, 1).
+phrygian(6, 2).
+phrygian(7, 2).
+
+% Starting Note relative to Major scale = IV
+lydian(1, 2).
+lydian(2, 2).
+lydian(3, 2).
+lydian(4, 1).
+lydian(5, 2).
+lydian(6, 2).
+lydian(7, 1).
+
+% Starting Note relative to Major scale = V
+mixolydian(1, 2).
+mixolydian(2, 2).
+mixolydian(3, 1).
+mixolydian(4, 2).
+mixolydian(5, 2).
+mixolydian(6, 1).
+mixolydian(7, 2).
+
+% % Starting Note relative to Major scale = VI. (Natural minor scale)
+aeolian(1, 2).
+aeolian(2, 1).
+aeolian(3, 2).
+aeolian(4, 2).
+aeolian(5, 1).
+aeolian(6, 2).
+aeolian(7, 2).
+
+% Starting Note relative to Major scale = VII
+locrian(1, 1).
+locrian(2, 2).
+locrian(3, 2).
+locrian(4, 1).
+locrian(5, 2).
+locrian(6, 2).
+locrian(7, 2).
 
 % ------- Chord progressions ------- %
 % progression_type(Number_of_chord, Semitones_to_next_note, Quality)
@@ -238,6 +301,124 @@ name_chord(Key, Quality, Chord):-
   upcase_atom(Key, Ch),
   atom_concat(Ch, 'dim', Chord), !.
 
+% ------- Diatonic Scales ------- %
+build_scales(Key):-
+  is_note(Key),
+  % Ionian
+  scale(Key, ionian, 1, I),
+  print('Ionian: '),
+  print(I),
+
+  % Dorian
+  next_n_semitone(Key, 2, KII),
+  scale(KII, dorian, 1, II),
+  nl,
+  print('Dorian: '),
+  print(II),
+
+  % Phrygian
+  next_n_semitone(Key, 4, KIII),
+  scale(KIII, phrygian, 1, III),
+  nl,
+  print('Phrygian: '),
+  print(III),
+
+  % Lydian
+  next_n_semitone(Key, 5, KIV),
+  scale(KIV, lydian, 1, IV),
+  nl,
+  print('Lydian: '),
+  print(IV),
+
+  % Mixolydian
+  next_n_semitone(Key, 7, KV),
+  scale(KV, mixolydian, 1, V),
+  nl,
+  print('Mixolydian: '),
+  print(V),
+
+  % Aeolian
+  next_n_semitone(Key, 9, KVI),
+  scale(KVI, aeolian, 1, VI),
+  nl,
+  print('Aeolian: '),
+  print(VI),
+
+  % Locrian
+  next_n_semitone(Key, 11, KVII),
+  scale(KVII, locrian, 1, VII),
+  nl,
+  print('Locrian: '),
+  print(VII).
+
+
+
+% Base case
+scale(_, _, 8, []):- !.
+
+% Ionian mode
+scale(Key, ionian, N, [H|T]):-
+  N < 8,
+  upcase_atom(Key, H),
+  ionian(N, ST),
+  next_n_semitone(Key, ST, NewKey),
+  NewN is N + 1,
+  scale(NewKey, ionian, NewN, T).
+
+% Dorian mode
+scale(Key, dorian, N, [H|T]):-
+  N < 8,
+  upcase_atom(Key, H),
+  dorian(N, ST),
+  next_n_semitone(Key, ST, NewKey),
+  NewN is N + 1,
+  scale(NewKey, dorian, NewN, T).
+
+% Phrygian mode
+scale(Key, phrygian, N, [H|T]):-
+  N < 8,
+  upcase_atom(Key, H),
+  phrygian(N, ST),
+  next_n_semitone(Key, ST, NewKey),
+  NewN is N + 1,
+  scale(NewKey, phrygian, NewN, T).
+
+% Lydian mode
+scale(Key, lydian, N, [H|T]):-
+  N < 8,
+  upcase_atom(Key, H),
+  lydian(N, ST),
+  next_n_semitone(Key, ST, NewKey),
+  NewN is N + 1,
+  scale(NewKey, lydian, NewN, T).
+
+% Mixolydian mode
+scale(Key, mixolydian, N, [H|T]):-
+  N < 8,
+  upcase_atom(Key, H),
+  mixolydian(N, ST),
+  next_n_semitone(Key, ST, NewKey),
+  NewN is N + 1,
+  scale(NewKey, mixolydian, NewN, T).
+
+% Aeolian mode
+scale(Key, aeolian, N, [H|T]):-
+  N < 8,
+  upcase_atom(Key, H),
+  aeolian(N, ST),
+  next_n_semitone(Key, ST, NewKey),
+  NewN is N + 1,
+  scale(NewKey, aeolian, NewN, T).
+
+% Locrian mode
+scale(Key, locrian, N, [H|T]):-
+  N < 8,
+  upcase_atom(Key, H),
+  locrian(N, ST),
+  next_n_semitone(Key, ST, NewKey),
+  NewN is N + 1,
+  scale(NewKey, locrian, NewN, T).
+
 % ------- Chord Progression ------- %
 % Builds the chord progression in the Key and Quality given
 % build_progression(c, major, X). -> X = ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim']
@@ -275,22 +456,22 @@ build(Key, minor, N, [H|T]):-
 % ------- Modes ------- %
 % Characteristic chord combination for relative modes
 
-dorian(Tonic, [Chord1, Chord2]):-
+dorian_chords(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, min, Chord1),
   perfect_fourth(Tonic, Note),
   name_chord(Note, maj, Chord2).
 
-phrygian(Tonic, [Chord1, Chord2]):-
+phrygian_chords(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, min, Chord1),
   minor_second(Tonic, Note),
   name_chord(Note, maj, Chord2).
 
-lydian(Tonic, [Chord1, Chord2]):-
+lydian_chords(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, maj, Chord1),
   major_second(Tonic, Note),
   name_chord(Note, maj, Chord2).
 
-mixolydian(Tonic, [Chord1, Chord2]):-
+mixolydian_chords(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, maj, Chord1),
   minor_seventh(Tonic, Note),
   name_chord(Note, maj, Chord2).
