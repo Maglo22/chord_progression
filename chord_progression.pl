@@ -579,4 +579,5 @@ launch:-
   build_progression(Key, Quality, P),
   write('Progression:'), nl, write(P), nl, nl,
   write('List of Chords:'), nl,
-  list_chords(Key, Quality).
+  list_chords(Key, Quality),
+  launch.
