@@ -1,9 +1,10 @@
-% Bruno Maglioni A01700879
+% Bruno Maglioni Granada
 
 % === Knowledge Base === %
 
-% ------- Notes ------- %
-% 12-tone chromatic scale
+% //------- Notes -------// %
+
+% 12-tone chromatic scale.
 is_note(c).
 is_note(c_sharp). is_note(d_flat).
 is_note(d).
@@ -17,7 +18,7 @@ is_note(a).
 is_note(a_sharp). is_note(b_flat).
 is_note(b).
 
-% Notes that are equal
+% Notes that are equal (enharmonic equivalent).
 same_note(c_sharp, d_flat).
 same_note(d_sharp, e_flat).
 same_note(f_sharp, g_flat).
@@ -25,8 +26,9 @@ same_note(g_sharp, a_flat).
 same_note(a_sharp, b_flat).
 
 
-% ------- Scale ------- %
-% Standard note progression (using sharps)
+% //------- Scale -------// %
+
+% Standard note progression (using sharps).
 next(c, c_sharp).
 next(c_sharp, d).
 next(d, d_sharp).
@@ -40,7 +42,7 @@ next(a, a_sharp).
 next(a_sharp, b).
 next(b, c).
 
-% Reverse note progression (using flats)
+% Reverse note progression (using flats).
 prev(c, b).
 prev(b, b_flat).
 prev(b_flat, a).
@@ -54,8 +56,8 @@ prev(e_flat, d).
 prev(d, d_flat).
 prev(d_flat, c).
 
-% Diatonic scales (modes)
-% Starting Note relative to Major scale = I. (Major scale)
+% --- Diatonic scales (modes) --- %
+% Starting Note relative to Major scale = I. (Major scale).
 ionian(1, 2).
 ionian(2, 2).
 ionian(3, 1).
@@ -64,7 +66,7 @@ ionian(5, 2).
 ionian(6, 2).
 ionian(7, 1).
 
-% Starting Note relative to Major scale = II
+% Starting Note relative to Major scale = II.
 dorian(1, 2).
 dorian(2, 1).
 dorian(3, 2).
@@ -73,7 +75,7 @@ dorian(5, 2).
 dorian(6, 1).
 dorian(7, 2).
 
-% Starting Note relative to Major scale = III
+% Starting Note relative to Major scale = III.
 phrygian(1, 1).
 phrygian(2, 2).
 phrygian(3, 2).
@@ -82,7 +84,7 @@ phrygian(5, 1).
 phrygian(6, 2).
 phrygian(7, 2).
 
-% Starting Note relative to Major scale = IV
+% Starting Note relative to Major scale = IV.
 lydian(1, 2).
 lydian(2, 2).
 lydian(3, 2).
@@ -91,7 +93,7 @@ lydian(5, 2).
 lydian(6, 2).
 lydian(7, 1).
 
-% Starting Note relative to Major scale = V
+% Starting Note relative to Major scale = V.
 mixolydian(1, 2).
 mixolydian(2, 2).
 mixolydian(3, 1).
@@ -100,7 +102,7 @@ mixolydian(5, 2).
 mixolydian(6, 1).
 mixolydian(7, 2).
 
-% % Starting Note relative to Major scale = VI. (Natural minor scale)
+% Starting Note relative to Major scale = VI. (Natural minor scale).
 aeolian(1, 2).
 aeolian(2, 1).
 aeolian(3, 2).
@@ -109,7 +111,7 @@ aeolian(5, 1).
 aeolian(6, 2).
 aeolian(7, 2).
 
-% Starting Note relative to Major scale = VII
+% Starting Note relative to Major scale = VII.
 locrian(1, 1).
 locrian(2, 2).
 locrian(3, 2).
@@ -118,8 +120,9 @@ locrian(5, 2).
 locrian(6, 2).
 locrian(7, 2).
 
-% ------- Chord progressions ------- %
-% progression_type(Number_of_chord, Semitones_to_next_note, Quality)
+% //------- Chord progressions -------// %
+
+% progression_type(Number_of_chord, Semitones_to_next_note, Quality_of_chord).
 
 % Major -> I ii iii IV V vi vii°
 major(1, 2, maj).
@@ -141,8 +144,9 @@ minor(7, 2, maj).
 
 % === Rules === %
 
-% ------- Intervals ------- %
-% next_n_semitone(Root, Number, Note)
+% //------- Intervals -------// %
+
+% next_n_semitone(Root, Number, Note).
 % Binds to Note the nth semitone starting from Root.
 % next_n_semitone(g, 5, R) -> R = c
 next_n_semitone(Root, 0, Root):-!.
@@ -153,7 +157,8 @@ next_n_semitone(Root, Number, Note):-
   next(Root, NewRoot),
   next_n_semitone(NewRoot, NewNumber, Note).
 
-% Main intervals (chromatic scale)
+% --- Main intervals (chromatic scale) --- %
+
 perfect_unison(Root, Note):-
   next_n_semitone(Root, 0, Note).
 
@@ -194,11 +199,12 @@ perfect_octave(Root, Note):-
   next_n_semitone(Root, 12, Note).
 
 
-% ------- Chords ------- %
-% Chord building
+% //------- Chords -------// %
 
-% Triads
-% Returns a list with the major chord built from the Root
+% --- Chord building --- %
+
+% --- Triads --- %
+% Returns a list with the major chord built from the Root.
 major_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -207,7 +213,7 @@ major_chord(Root, [N1, N2, N3]):-
   perfect_fifth(Root, Note3),
   upcase_atom(Note3, N3).
 
-% Returns a list with the minor chord built from the Root
+% Returns a list with the minor chord built from the Root.
 minor_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -216,7 +222,7 @@ minor_chord(Root, [N1, N2, N3]):-
   perfect_fifth(Root, Note3),
   upcase_atom(Note3, N3).
 
-% Returns a list with the diminished chord built from the Root
+% Returns a list with the diminished chord built from the Root.
 diminished_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -225,7 +231,7 @@ diminished_chord(Root, [N1, N2, N3]):-
   tritone(Root, Note3),
   upcase_atom(Note3, N3).
 
-% Returns a list with the augmented chord built from the Root
+% Returns a list with the augmented chord built from the Root.
 augmented_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -234,6 +240,7 @@ augmented_chord(Root, [N1, N2, N3]):-
   minor_sixth(Root, Note3),
   upcase_atom(Note3, N3).
 
+% Returns a list with the suspended 2 chord built from the Root.
 sus2_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -242,6 +249,7 @@ sus2_chord(Root, [N1, N2, N3]):-
   perfect_fifth(Root, Note3),
   upcase_atom(Note3, N3).
 
+% Returns a list with the suspended 4 chord built from the Root.
 sus4_chord(Root, [N1, N2, N3]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -250,7 +258,8 @@ sus4_chord(Root, [N1, N2, N3]):-
   perfect_fifth(Root, Note3),
   upcase_atom(Note3, N3).
 
-% Tetrads
+% --- Tetrads --- %
+% Returns a list with the major seventh chord chord built from the Root.
 major_seventh_chord(Root, [N1, N2, N3, N4]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -261,6 +270,7 @@ major_seventh_chord(Root, [N1, N2, N3, N4]):-
   major_seventh(Root, Note4),
   upcase_atom(Note4, N4).
 
+% Returns a list with the minor seventh chord chord built from the Root.
 minor_seventh_chord(Root, [N1, N2, N3, N4]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -271,6 +281,7 @@ minor_seventh_chord(Root, [N1, N2, N3, N4]):-
   minor_seventh(Root, Note4),
   upcase_atom(Note4, N4).
 
+% Returns a list with the dominant seventh chord chord built from the Root.
 dominant_seventh_chord(Root, [N1, N2, N3, N4]):-
   is_note(Root),
   upcase_atom(Root, N1),
@@ -281,82 +292,154 @@ dominant_seventh_chord(Root, [N1, N2, N3, N4]):-
   minor_seventh(Root, Note4),
   upcase_atom(Note4, N4).
 
-% Chord naming
 
-% Binds to Chord the name based on quaility (Major, Minor, Dim)
+% --- Chord naming --- %
+
+% name_chord(Key, Quality, Chord).
+% Binds to Chord the name based on quaility (Major, Minor, Dim).
 % name_chord(d, min, X). -> X = 'Dm'
 name_chord(Key, Quality, Chord):-
   % Major chord
   is_note(Key),
   Quality == maj,
   upcase_atom(Key, Chord), !;
-  % Minor chord
+
+  % Minor chord.
   is_note(Key),
   Quality == min,
   upcase_atom(Key, Ch),
   atom_concat(Ch, 'm', Chord), !;
-  % Diminished chord
+
+  % Diminished chord.
   is_note(Key),
   Quality == dim,
   upcase_atom(Key, Ch),
   atom_concat(Ch, 'dim', Chord), !.
 
-% ------- Diatonic Scales ------- %
+% List chords of a progression.
+list_chords(Key, Quality):-
+  % Major progression
+  is_note(Key),
+  Quality == major,
+  scale(Key, ionian, 1, Scale),
+  get_chords(Scale, 1, Quality), !;
+
+  % Minor progression.
+  is_note(Key),
+  Quality == minor,
+  scale(Key, aeolian, 1, Scale),
+  get_chords(Scale, 1, Quality).
+
+% Base case.
+get_chords([], 8, _):- !.
+
+% Major progression.
+get_chords([H|T], N, major):-
+  N < 8,
+  major(N, _, Q),
+  downcase_atom(H, Note),
+  print_chord(Note, Q),
+  NewN is N + 1,
+  get_chords(T, NewN, major).
+
+% Minor progression.
+get_chords([H|T], N, minor):-
+  N < 8,
+  minor(N, _, Q),
+  downcase_atom(H, Note),
+  print_chord(Note, Q),
+  NewN is N + 1,
+  get_chords(T, NewN, minor).
+
+
+% --- Chord printing --- %
+
+% print_chord(Key, Quality).
+% Prints the chord name and its notes.
+% print_chord(c, maj). -> C  nl  [C, E, G].
+
+% Major chords.
+print_chord(Key, Quality):-
+  Quality == maj,
+  major_chord(Key, X),
+  name_chord(Key, Quality, Chord),
+  write(Chord), nl,
+  write(X), nl, nl, !.
+
+% Minor chords.
+print_chord(Key, Quality):-
+  Quality == min,
+  minor_chord(Key, X),
+  name_chord(Key, Quality, Chord),
+  write(Chord), nl,
+  write(X), nl, nl, !.
+
+% Diminished chords.
+print_chord(Key, Quality):-
+  Quality == dim,
+  diminished_chord(Key, X),
+  name_chord(Key, Quality, Chord),
+  write(Chord), nl,
+  write(X), nl, nl, !.
+
+% //------- Diatonic Scales -------// %
+
+% build_scales(Key).
+% builds all the 7 diatonic scale modes from the Key given.
 build_scales(Key):-
   is_note(Key),
   % Ionian
   scale(Key, ionian, 1, I),
-  print('Ionian: '),
-  print(I),
+  write('Ionian: '),
+  write(I),
 
   % Dorian
   next_n_semitone(Key, 2, KII),
   scale(KII, dorian, 1, II),
   nl,
-  print('Dorian: '),
-  print(II),
+  write('Dorian: '),
+  write(II),
 
   % Phrygian
   next_n_semitone(Key, 4, KIII),
   scale(KIII, phrygian, 1, III),
   nl,
-  print('Phrygian: '),
-  print(III),
+  write('Phrygian: '),
+  write(III),
 
   % Lydian
   next_n_semitone(Key, 5, KIV),
   scale(KIV, lydian, 1, IV),
   nl,
-  print('Lydian: '),
-  print(IV),
+  write('Lydian: '),
+  write(IV),
 
   % Mixolydian
   next_n_semitone(Key, 7, KV),
   scale(KV, mixolydian, 1, V),
   nl,
-  print('Mixolydian: '),
-  print(V),
+  write('Mixolydian: '),
+  write(V),
 
   % Aeolian
   next_n_semitone(Key, 9, KVI),
   scale(KVI, aeolian, 1, VI),
   nl,
-  print('Aeolian: '),
-  print(VI),
+  write('Aeolian: '),
+  write(VI),
 
   % Locrian
   next_n_semitone(Key, 11, KVII),
   scale(KVII, locrian, 1, VII),
   nl,
-  print('Locrian: '),
-  print(VII).
+  write('Locrian: '),
+  write(VII).
 
 
-
-% Base case
+% Base case.
 scale(_, _, 8, []):- !.
 
-% Ionian mode
+% Ionian mode.
 scale(Key, ionian, N, [H|T]):-
   N < 8,
   upcase_atom(Key, H),
@@ -365,7 +448,7 @@ scale(Key, ionian, N, [H|T]):-
   NewN is N + 1,
   scale(NewKey, ionian, NewN, T), !.
 
-% Dorian mode
+% Dorian mode.
 scale(Key, dorian, N, [H|T]):-
   N < 8,
   upcase_atom(Key, H),
@@ -374,7 +457,7 @@ scale(Key, dorian, N, [H|T]):-
   NewN is N + 1,
   scale(NewKey, dorian, NewN, T), !.
 
-% Phrygian mode
+% Phrygian mode.
 scale(Key, phrygian, N, [H|T]):-
   N < 8,
   upcase_atom(Key, H),
@@ -383,7 +466,7 @@ scale(Key, phrygian, N, [H|T]):-
   NewN is N + 1,
   scale(NewKey, phrygian, NewN, T), !.
 
-% Lydian mode
+% Lydian mode.
 scale(Key, lydian, N, [H|T]):-
   N < 8,
   upcase_atom(Key, H),
@@ -392,7 +475,7 @@ scale(Key, lydian, N, [H|T]):-
   NewN is N + 1,
   scale(NewKey, lydian, NewN, T), !.
 
-% Mixolydian mode
+% Mixolydian mode.
 scale(Key, mixolydian, N, [H|T]):-
   N < 8,
   upcase_atom(Key, H),
@@ -401,7 +484,7 @@ scale(Key, mixolydian, N, [H|T]):-
   NewN is N + 1,
   scale(NewKey, mixolydian, NewN, T), !.
 
-% Aeolian mode
+% Aeolian mode.
 scale(Key, aeolian, N, [H|T]):-
   N < 8,
   upcase_atom(Key, H),
@@ -410,7 +493,7 @@ scale(Key, aeolian, N, [H|T]):-
   NewN is N + 1,
   scale(NewKey, aeolian, NewN, T), !.
 
-% Locrian mode
+% Locrian mode.
 scale(Key, locrian, N, [H|T]):-
   N < 8,
   upcase_atom(Key, H),
@@ -419,9 +502,11 @@ scale(Key, locrian, N, [H|T]):-
   NewN is N + 1,
   scale(NewKey, locrian, NewN, T), !.
 
-% ------- Chord Progression ------- %
-% Builds the chord progression in the Key and Quality given
-% build_progression(c, major, X). -> X = ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim']
+% //------- Chord Progressions -------// %
+
+% build_progression(Key, Quality, List).
+% Builds the chord progression in the Key and Quality given.
+% build_progression(c, major, X). -> X = ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'].
 build_progression(Key, Quality, List):-
   is_note(Key),
   Quality == major,
@@ -437,7 +522,6 @@ build(Key, major, N, [H|T]):-
   N < 8,
   major(N, ST, Quality),
   name_chord(Key, Quality, H),
-  % print(H),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
   build(NewKey, major, NewN, T).
@@ -447,31 +531,52 @@ build(Key, minor, N, [H|T]):-
   N < 8,
   minor(N, ST, Quality),
   name_chord(Key, Quality, H),
-  % print(H),
   next_n_semitone(Key, ST, NewKey),
   NewN is N + 1,
   build(NewKey, minor, NewN, T).
 
 
-% ------- Modes ------- %
-% Characteristic chord combination for relative modes
+% //------- Modes -------// %
 
+% Characteristic chord combination for relative modes.
+% Returns the pair of chords that give the mode its characteristic sound.
+
+% Dorian
 dorian_chords(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, min, Chord1),
   perfect_fourth(Tonic, Note),
   name_chord(Note, maj, Chord2).
 
+% Phrygian
 phrygian_chords(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, min, Chord1),
   minor_second(Tonic, Note),
   name_chord(Note, maj, Chord2).
 
+% Lydian
 lydian_chords(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, maj, Chord1),
   major_second(Tonic, Note),
   name_chord(Note, maj, Chord2).
 
+% Mixolydian
 mixolydian_chords(Tonic, [Chord1, Chord2]):-
   name_chord(Tonic, maj, Chord1),
   minor_seventh(Tonic, Note),
   name_chord(Note, maj, Chord2).
+
+
+% //------- Main -------// %
+% Command to launch and generate the chord progression.
+launch:-
+  write('Simple Chord Progression Knowledge Base in Prolog.'), nl, nl,
+  write('Introduce the key note for the chord progression'), nl,
+  write('(c, c_sharp, d, d_sharp, e, f, f_sharp, g, g_sharp, a, a_sharp, b)'), nl,
+  read(Key),
+  is_note(Key), nl,
+  write('What type of progression do you want to see ("major." or "minor.")'), nl,
+  read(Quality), nl,
+  build_progression(Key, Quality, P),
+  write('Progression:'), nl, write(P), nl, nl,
+  write('List of Chords:'), nl,
+  list_chords(Key, Quality).
